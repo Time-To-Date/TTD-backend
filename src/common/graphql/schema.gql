@@ -1,0 +1,23 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  allUsers: [User!]
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+"""user"""
+type User {
+  createdAt: Timestamp!
+  deletedAt: Timestamp!
+  email: String!
+  id: Int!
+  name: String!
+  profile_message: String!
+  updatedAt: Timestamp!
+}
