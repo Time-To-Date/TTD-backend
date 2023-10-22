@@ -1,12 +1,17 @@
+import { User } from '@/modules/user/dto/user-response';
+import { UserService } from '@/modules/user/user.service';
 import { Query, Resolver } from '@nestjs/graphql';
-import { User } from './models/user.model';
-import { PrismaService } from '../prisma/prisma.service';
 
-@Resolver(User)
+@Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly prismaService: PrismaService) {}
-  @Query(() => [User], { nullable: true })
+  constructor(private readonly userService: UserService) {}
+  @Query(() => [User], { name: 'users' })
   async allUsers() {
-    return this.prismaService.user.findMany();
+    return this.userService.findAll();
+  }
+
+  @Query(() => [User], { name: 'user' })
+  async findUser(id: number) {
+    return this.userService.findOne(id);
   }
 }

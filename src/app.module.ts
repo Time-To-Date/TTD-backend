@@ -2,9 +2,12 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
-import { UserModule } from './modules/user/user.module';
-import { PrismaModule } from './modules/prisma/prisma.module';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { UserModule } from '@/modules/user/user.module';
+import { PrismaModule } from '@/modules/prisma/prisma.module';
+import { AuthModule } from '@/modules/auth/auth.module';
+import { AuthResolver } from '@/modules/auth/auth.resolver';
+import { AuthService } from '@/modules/auth/auth.service';
+import { LoggerMiddleware } from '@/common/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -17,9 +20,10 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     }),
     UserModule,
     PrismaModule,
+    AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [AuthResolver, AuthService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
