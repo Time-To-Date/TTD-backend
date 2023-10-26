@@ -1,4 +1,4 @@
-import { AuthResolver } from '@/modules/auth/auth.resolver';
+import { AuthController } from '@/modules/auth/auth.controller';
 import { AuthService } from '@/modules/auth/auth.service';
 import { JwtStrategy } from '@/modules/auth/strategy/jwt.strategy';
 import { LocalStrategy } from '@/modules/auth/strategy/local.strategy';
@@ -16,6 +16,8 @@ import { PassportModule } from '@nestjs/passport';
       secret: process.env.JWT_SECRET,
     }),
   ],
-  providers: [AuthResolver, AuthService, LocalStrategy, JwtStrategy],
+  controllers: [AuthController],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}
