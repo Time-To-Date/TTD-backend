@@ -1,4 +1,9 @@
-import { IJwtPayload, ITokens } from '@/modules/auth/interface/auth.interface';
+import {
+  IAccessToken,
+  IJwtPayload,
+  IRefreshToken,
+  ITokens,
+} from '@/modules/auth/interface/auth.interface';
 import { UserRequiredProperties } from '@/modules/user/dto/user.dto';
 import { UserRepository } from '@/modules/user/user.repository';
 import { Injectable } from '@nestjs/common';
@@ -22,7 +27,7 @@ export class AuthService {
     return tokens;
   }
 
-  async getAccessToken(id: number) {
+  async getAccessToken(id: number): Promise<IAccessToken> {
     const jwtPayload = {
       id,
     };
@@ -33,7 +38,7 @@ export class AuthService {
     return { accessToken };
   }
 
-  async getRefreshToken(id: number) {
+  async getRefreshToken(id: number): Promise<IRefreshToken> {
     const jwtPayload: IJwtPayload = {
       id,
     };
