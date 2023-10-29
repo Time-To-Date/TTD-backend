@@ -11,31 +11,31 @@ import {
 export class User {
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  readonly id: number;
 
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  readonly email: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  readonly name: string;
 
   @IsString()
   @IsOptional()
-  profile_message?: string;
+  readonly profile_message?: string;
 
   @IsDate()
   @IsNotEmpty()
-  createdAt: Date;
+  readonly createdAt: Date;
 
   @IsDate()
   @IsNotEmpty()
-  updatedAt: Date;
+  readonly updatedAt: Date;
 
   @IsDate()
   @IsOptional()
-  deletedAt?: Date;
+  readonly deletedAt?: Date;
 }
 
 export class UserRequiredProperties extends PickType(User, ['email', 'name']) {}

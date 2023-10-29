@@ -8,7 +8,7 @@ import { UserService } from '@/modules/user/user.service';
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-@Controller('api/auth')
+@Controller('/api/auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -19,7 +19,7 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   google() {}
 
-  @Get('google/login')
+  @Get('/google/login')
   @UseGuards(GoogleAuthGuard)
   async loginGoogle(
     @Req() req: Request & GoogleUserRequest,

@@ -3,12 +3,13 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class GoogleUser {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  readonly name: string;
+
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  readonly email: string;
 }
 
 export class GoogleUserRequest {
-  user: GoogleUser;
+  readonly user: GoogleUser;
 }
