@@ -1,22 +1,22 @@
 import { IJwtPayload, ITokens } from '@/modules/auth/interface/auth.interface';
 import { UserRequiredProperties } from '@/modules/user/dto/user.dto';
-import { UserService } from '@/modules/user/user.service';
+import { UserRepository } from '@/modules/user/user.repository';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
   ) {}
 
   async googleLogin(newUser: UserRequiredProperties): Promise<ITokens> {
-    const findUser = await this.userService.findByEmail(newUser.email);
+    const findUser = await this.userRepository.findByEmail(newUser.email);
     if (!findUser) {
-      await this.userService.create(newUser);
+      await this.userRepository.create(newUser);
     }
-    const user = await this.userService.findByEmail(newUser.email);
+    const user = await this.userRepository.findByEmail(newUser.email);
 
     const tokens = await this.getTokens(user.id);
     return tokens;
