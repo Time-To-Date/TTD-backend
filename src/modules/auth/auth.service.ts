@@ -1,6 +1,7 @@
-import { LoginUserInput } from '@/modules/auth/dto/login-user.input';
+import { IJwtPayload, ITokens } from '@/modules/auth/interface/auth.interface';
+import { UserRequiredProperties } from '@/modules/user/dto/user.dto';
 import { UserService } from '@/modules/user/user.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -9,26 +10,55 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
-  async validateUser(id: number): Promise<any> {
-    const user = await this.userService.findOne(id);
 
-    return user;
-  }
-
-  async signup(loginUserInput: LoginUserInput) {
-    const user = await this.userService.findOne(loginUserInput.id);
-    if (user) {
-      throw new BadRequestException('user already exists');
+  async googleLogin(newUser: UserRequiredProperties): Promise<ITokens> {
+    const findUser = await this.userService.findByEmail(newUser.email);
+    if (!findUser) {
+      await this.userService.create(newUser);
     }
+    const user = await this.userService.findByEmail(newUser.email);
+
+    const tokens = await this.getTokens(user.id);
+    return tokens;
   }
 
-  async login(loginUserInput: LoginUserInput) {
-    const user = await this.userService.findOne(loginUserInput.id);
-    return {
-      access_token: this.jwtService.sign({
-        id: user.id,
-      }),
-      user,
+  async getAccessToken(id: number) {
+    const jwtPayload = {
+      id,
     };
+    const accessToken = await this.jwtService.signAsync(jwtPayload, {
+      secret: process.env.JWT_ACCESS_SECRET,
+      expiresIn: process.env.JWT_ACCESS_EXPIRESIN,
+    });
+    return { accessToken };
   }
+
+  async getRefreshToken(id: number) {
+    const jwtPayload: IJwtPayload = {
+      id,
+    };
+    const refreshToken = await this.jwtService.signAsync(jwtPayload, {
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: process.env.JWT_REFRESH_EXPIRESIN,
+    });
+    return { refreshToken };
+  }
+
+  async getTokens(id: number): Promise<ITokens> {
+    const [{ accessToken }, { refreshToken }] = await Promise.all([
+      this.getAccessToken(id),
+      this.getRefreshToken(id),
+    ]);
+    return { accessToken, refreshToken };
+  }
+
+  // async restoreRefreshToken(refreshToken: string): Promise<ITokens> {
+  //   const user = await this.userService.findById(id);
+
+  //   const accessToken = await this.get;
+
+  //   const tokens = await this.getTokens(user.id);
+
+  //   return tokens;
+  // }
 }
