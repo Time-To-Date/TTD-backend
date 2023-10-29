@@ -2,6 +2,7 @@ import { PickType } from '@nestjs/mapped-types';
 import {
   IsDate,
   IsEmail,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -9,12 +10,15 @@ import {
 
 export class User {
   @IsNumber()
+  @IsNotEmpty()
   id: number;
 
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsString()
@@ -22,9 +26,11 @@ export class User {
   profile_message?: string;
 
   @IsDate()
+  @IsNotEmpty()
   createdAt: Date;
 
   @IsDate()
+  @IsNotEmpty()
   updatedAt: Date;
 
   @IsDate()
